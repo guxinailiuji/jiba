@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>JB Token - 创新型Meme币挖矿平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-black text-white font-sans antialiased">
+    <div class="loader-container fixed inset-0 z-50 flex items-center justify-center bg-black">
+        <div class="loader">
+            <svg viewBox="0 0 80 80" class="w-16 h-16">
+                <circle cx="40" cy="40" r="32" stroke-width="6" stroke="#FF9900" fill="none" stroke-dasharray="60 100"></circle>
+            </svg>
+            <div class="mt-4 font-geist-mono text-lg text-white">JB Token 加载中...</div>
+        </div>
+    </div>
+
+    <header class="fixed top-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-md border-b border-gray-800">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <svg class="w-10 h-10 mr-3" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="20" cy="20" r="18" fill="#111111" stroke="#FF9900" stroke-width="2"/>
+                    <path d="M13 15.5C13 14.12 14.12 13 15.5 13H24.5C25.88 13 27 14.12 27 15.5V24.5C27 25.88 25.88 27 24.5 27H15.5C14.12 27 13 25.88 13 24.5V15.5Z" fill="#FF9900"/>
+                    <path d="M18 19L22 19L22 21L18 21L18 19Z" fill="white"/>
+                </svg>
+                <span class="text-xl font-bold bg-gradient-to-r from-orange-500 to-yellow-500 text-transparent bg-clip-text">JB Token</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="#mining" class="text-gray-300 hover:text-white transition-colors">挖矿</a>
+                <a href="#staking" class="text-gray-300 hover:text-white transition-colors">质押</a>
+                <a href="#stats" class="text-gray-300 hover:text-white transition-colors">数据</a>
+                <a href="#about" class="text-gray-300 hover:text-white transition-colors">关于</a>
+            </div>
+            <button id="connect-wallet" class="px-4 py-2 bg-gradient-to-r from-orange-500 to-yellow-600 rounded-md text-sm font-medium hover:opacity-90 transition-opacity flex items-center">
+                <i data-lucide="wallet" class="w-4 h-4 mr-2"></i>
+                连接钱包
+            </button>
+        </div>
+    </header>
+
+    <main class="pt-20">
+        <!-- Hero Section -->
+        <section class="relative overflow-hidden py-20">
+            <div class="absolute inset-0 z-0">
+                <div id="particles-js" class="h-full w-full"></div>
+            </div>
+            <div class="container mx-auto px-4 relative z-10">
+                <div class="max-w-3xl mx-auto text-center">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                        <span class="bg-gradient-to-r from-orange-500 via-yellow-500 to-orange-500 text-transparent bg-clip-text">JB Token</span>
+                        <span class="block mt-2">创新型Meme币挖矿平台</span>
+                    </h1>
+                    <p class="text-xl text-gray-300 mb-8">基于PoS共识的下一代加密货币挖矿体验，总供应量仅 21,000,000 枚</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4 mb-12">
+                        <button id="start-mining-btn" class="px-6 py-3 bg-gradient-to-r from-orange-500 to-yellow-600 rounded-md font-medium text-white hover:opacity-90 transition-opacity flex items-center justify-center">
+                            <i data-lucide="pickaxe" class="w-5 h-5 mr-2"></i>
+                            开始挖矿
+                        </button>
+                        <button id="learn-more-btn" class="px-6 py-3 bg-gray-800 rounded-md font-medium text-white hover:bg-gray-700 transition-colors flex items-center justify-center">
+                            <i data-lucide="info" class="w-5 h-5 mr-2"></i>
+                            了解更多
+                        </button>
+                    </div>
+                </div>
+
+                <div class="max-w-4xl mx-auto">
+                    <div class="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-6 mb-8">
+                        <div class="flex flex-col sm:flex-row justify-between mb-3">
+                            <h3 class="text-lg font-medium mb-2 sm:mb-0">全网挖矿进度</h3>
+                            <div class="flex items-center">
+                                <span class="text-sm text-gray-400 mr-2">已挖掘:</span>
+                                <span id="mined-percentage" class="font-geist-mono text-orange-500">23.7%</span>
+                            </div>
+                        </div>
+                        <div class="relative h-6 bg-gray-800 rounded-md overflow-hidden mb-2 mining-progress-container">
+                            <div id="mining-progress" class="absolute top-0 left-0 h-full bg-gradient-to-r from-orange-600 to-yellow-500 rounded-md" style="width: 23.7%"></div>
+                            <div class="mining-light"></div>
+                        </div>
+                        <div class="flex justify-between text-sm text-gray-400">
+                            <div>总矿池: <span class="font-geist-mono text-white">12,600,000 JB</span></div>
+                            <div>剩余可挖: <span id="remaining-tokens" class="font-geist-mono text-white">9,613,800 JB</span></div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                        <div class="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-5 hover:border-gray-700 transition-colors">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-sm font-medium text-gray-400">当前汇率</h3>
+                                <i data-lucide="wallet" class="w-5 h-5 text-orange-500"></i>
+                            </div>
+                            <div class="font-geist-mono text-2xl">1 U = <span class="text-orange-500">137 JB</span></div>
+                        </div>
+                        <div class="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-5 hover:border-gray-700 transition-colors">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-sm font-medium text-gray-400">活跃矿工</h3>
+                                <i data-lucide="users" class="w-5 h-5 text-orange-500"></i>
+                            </div>
+                            <div class="font-geist-mono text-2xl"><span id="active-miners" class="text-orange-500">2,841</span> 人</div>
+                        </div>
+                        <div class="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-5 hover:border-gray-700 transition-colors">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-sm font-medium text-gray-400">全网挖矿速度</h3>
+                                <i data-lucide="timer" class="w-5 h-5 text-orange-500"></i>
+                            </div>
+                            <div class="font-geist-mono text-2xl"><span id="mining-speed" class="text-orange-500">1,274</span> JB/小时</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mining Section -->
+        <section id="mining" class="py-16 bg-gradient-to-b from-black to-gray-900 relative">
+            <div class="absolute inset-0 overflow-hidden opacity-10">
+                <svg class="mining-wave absolute bottom-0 left-0 w-full" viewBox="0 0 1440 320" preserveAspectRatio="none">
+                    <path fill="#FF9900" d="M0,32L48,53.3C96,75,192,117,288,144C384,171,480,181,576,165.3C672,149,768,107,864,112C960,117,1056,171,1152,197.3C1248,224,1344,224,1392,224L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                </svg>
+            </div>
+            <div class="container mx-auto px-4 relative z-10">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-16">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-4">JB Token 挖矿系统</h2>
+                        <p class="text-gray-300 max-w-2xl mx-auto">投入您的资产，获取JB Token。单次最大投资1U，每次投资后需等待24小时冷却期。</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="relative">
+                            <div class="mining-animation-container overflow-hidden h-[400px] bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl flex items-center justify-center">
+                                <div id="mining-animation" class="w-full h-full flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="w-32 h-32 mining-coin">
+                                        <circle cx="100" cy="100" r="80" fill="#111111" stroke="#FF9900" stroke-width="5"/>
+                                        <path d="M70 70C70 63.4 75.4 58 82 58H118C124.6 58 130 63.4 130 70V130C130 136.6 124.6 142 118 142H82C75.4 142 70 136.6 70 130V70Z" fill="#FF9900"/>
+                                        <path d="M85 95L115 95L115 105L85 105L85 95Z" fill="white"/>
+                                        <circle cx="100" cy="100" r="90" stroke="#FF9900" stroke-width="2" fill="none" stroke-dasharray="5 5" class="mining-circle"/>
+                                    </svg>
+                                    <div class="mining-particles"></div>
+                                </div>
+                            </div>
+                            <div class="absolute bottom-6 left-6 bg-black/70 backdrop-blur-sm px-4 py-2 rounded-lg">
+                                <div class="text-sm text-gray-400">矿池余额</div>
+                                <div id="pool-balance" class="font-geist-mono text-xl text-orange-500">9,613,800 JB</div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-6">
+                            <h3 class="text-xl font-semibold mb-6">挖矿面板</h3>
+                            <div class="mb-6">
+                                <label for="invest-amount" class="block text-sm font-medium text-gray-400 mb-2">投资金额 (最大 1U)</label>
+                                <div class="relative">
+                                    <input id="invest-amount" type="number" min="0.01" max="1" step="0.01" value="1" class="w-full bg-black/50 border border-gray-700 rounded-lg p-3 pr-20 font-geist-mono text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                    <div class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">U</div>
+                                </div>
+                                <div class="flex justify-between mt-1">
+                                    <button class="text-xs text-orange-500 hover:text-orange-400 transition-colors py-1" onclick="document.getElementById('invest-amount').value = '0.1'">0.1U</button>
+                                    <button class="text-xs text-orange-500 hover:text-orange-400 transition-colors py-1" onclick="document.getElementById('invest-amount').value = '0.5'">0.5U</button>
+                                    <button class="text-xs text-orange-500 hover:text-orange-400 transition-colors py-1" onclick="document.getElementById('invest-amount').value = '1'">1U (最大)</button>
+                                </div>
+                            </div>
+
+                            <div class="mb-6">
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-sm text-gray-400">预计获得 JB Token</span>
+                                    <span id="estimated-return" class="text-sm font-geist-mono text-white">132.70 JB</span>
+                                </div>
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-sm text-gray-400">当前活跃度加成</span>
+                                    <span id="activity-bonus" class="text-sm font-geist-mono text-orange-500">+22.7%</span>
+                                </div>
+                                <div class="flex justify-between mb-4">
+                                    <span class="text-sm text-gray-400">下次可挖矿时间</span>
+                                    <span id="next-mining-time" class="text-sm font-geist-mono text-white">立即可用</span>
+                                </div>
+                            </div>
+
+                            <button id="mine-now-btn" class="w-full py-3 bg-gradient-to-r from-orange-500 to-yellow-600 rounded-md font-medium text-white hover:opacity-90 transition-opacity flex items-center justify-center">
+                                <i data-lucide="pickaxe" class="w-5 h-5 mr-2"></i>
+                                开始挖矿
+                            </button>
+
+                            <div class="mt-4 p-3 bg-orange-500/10 border border-orange-500/20 rounded-lg">
+                                <div class="flex items-start">
+                                    <i data-lucide="lightbulb" class="w-5 h-5 text-orange-500 mr-2 flex-shrink-0 mt-0.5"></i>
+                                    <p class="text-sm text-gray-300">挖矿所得JB Token将自动进入您的质押池，持续质押12小时以上可获得额外30%的产出增益。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Staking Section -->
+        <section id="staking" class="py-16 bg-gray-900 relative">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-16">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-4">JB Token 质押系统</h2>
+                        <p class="text-gray-300 max-w-2xl mx-auto">质押您的JB Token获取被动收益，持续质押12小时以上可额外获得30%的产出增益。质押48小时后可随时提取。</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2 bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-6">
+                            <div class="flex flex-col md:flex-row justify-between md:items-center mb-6">
+                                <h3 class="text-xl font-semibold mb-2 md:mb-0">质押仪表盘</h3>
+                                <div class="flex items-center">
+                                    <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2 pulse-animation"></div>
+                                    <span class="text-sm text-green-500">已激活</span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+                                <div class="bg-black/40 rounded-lg p-4">
+                                    <div class="text-sm text-gray-400 mb-1">已质押金额</div>
+                                    <div id="staked-amount" class="font-geist-mono text-xl">1,437 JB</div>
+                                </div>
+                                <div class="bg-black/40 rounded-lg p-4">
+                                    <div class="text-sm text-gray-400 mb-1">质押时长</div>
+                                    <div id="staking-duration" class="font-geist-mono text-xl">17 小时</div>
+                                </div>
+                                <div class="bg-black/40 rounded-lg p-4">
+                                    <div class="text-sm text-gray-400 mb-1">当前状态</div>
+                                    <div id="staking-status" class="font-geist-mono text-xl text-orange-500">增强模式</div>
+                                </div>
+                                <div class="bg-black/40 rounded-lg p-4">
+                                    <div class="text-sm text-gray-400 mb-1">提取倒计时</div>
+                                    <div id="withdrawal-countdown" class="font-geist-mono text-xl">31 小时</div>
+                                </div>
+                            </div>
+
+                            <div class="mb-6">
+                                <div class="flex justify-between mb-2">
+                                    <h4 class="text-md font-medium">收益累计</h4>
+                                    <div class="font-geist-mono text-orange-500">+30% 增益已激活</div>
+                                </div>
+                                <div class="relative h-3 bg-gray-800 rounded-md overflow-hidden mb-1">
+                                    <div id="earnings-progress" class="absolute top-0 left-0 h-full bg-gradient-to-r from-green-500 to-green-400" style="width: 67%"></div>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <div class="text-gray-400">预计日收益: <span class="font-geist-mono text-white">0.89 JB/天</span></div>
+                                    <div>累计收益: <span id="total-earnings" class="font-geist-mono text-green-500">5.24 JB</span></div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                                <button id="add-stake-btn" class="py-2.5 bg-gray-800 hover:bg-gray-700 transition-colors rounded-md font-medium text-white flex items-center justify-center">
+                                    <i data-lucide="plus-circle" class="w-4 h-4 mr-2"></i>
+                                    增加质押
+                                </button>
+                                <button id="claim-rewards-btn" class="py-2.5 bg-gradient-to-r from-green-600 to-green-500 hover:opacity-90 transition-opacity rounded-md font-medium text-white flex items-center justify-center" disabled>
+                                    <i data-lucide="award" class="w-4 h-4 mr-2"></i>
+                                    提取收益 (31小时后可用)
+                                </button>
+                            </div>
+
+                            <div class="text-center mt-6">
+                                <div class="inline-flex items-center">
+                                    <input type="checkbox" id="auto-compound" class="w-4 h-4 accent-orange-500 bg-gray-700 rounded">
+                                    <label for="auto-compound" class="ml-2 text-sm text-gray-300">启用自动复利 (自动将收益重新质押以获得更高收益)</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl overflow-hidden flex flex-col">
+                            <div class="p-6 border-b border-gray-800">
+                                <h3 class="text-xl font-semibold mb-4">质押收益计算器</h3>
+                                <div class="mb-4">
+                                    <label for="calc-amount" class="block text-sm font-medium text-gray-400 mb-2">质押金额 (JB)</label>
+                                    <input id="calc-amount" type="number" min="1" value="1000" class="w-full bg-black/50 border border-gray-700 rounded-lg p-3 font-geist-mono text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="calc-duration" class="block text-sm font-medium text-gray-400 mb-2">质押时长</label>
+                                    <select id="calc-duration" class="w-full bg-black/50 border border-gray-700 rounded-lg p-3 font-geist-mono text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                        <option value="1">1 天</option>
+                                        <option value="7">7 天</option>
+                                        <option value="30" selected>30 天</option>
+                                        <option value="90">90 天</option>
+                                        <option value="365">365 天</option>
+                                    </select>
+                                </div>
+                                <div class="mb-4">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="calc-boosted" class="w-4 h-4 accent-orange-500 bg-gray-700 rounded" checked>
+                                        <label for="calc-boosted" class="ml-2 text-sm text-gray-300">包含12小时+增益(+30%)</label>
+                                    </div>
+                                </div>
+                                <button id="calculate-btn" class="w-full py-2.5 bg-orange-500 hover:bg-orange-600 transition-colors rounded-md font-medium text-white">计算收益</button>
+                            </div>
+                            <div class="flex-1 flex flex-col bg-black/30 p-6">
+                                <h4 class="text-md font-medium text-gray-300 mb-4">预计收益</h4>
+                                <div class="grid grid-cols-2 gap-4 mb-auto">
+                                    <div>
+                                        <div class="text-sm text-gray-400 mb-1">基础年化率</div>
+                                        <div class="font-geist-mono text-lg">15%</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm text-gray-400 mb-1">有效年化率</div>
+                                        <div id="effective-apr" class="font-geist-mono text-lg text-green-500">19.5%</div>
+                                    </div>
+                                </div>
+                                <div class="mt-4 p-4 bg-gray-800/50 rounded-lg">
+                                    <div class="text-center">
+                                        <div class="text-sm text-gray-400 mb-1">总收益 (30天)</div>
+                                        <div id="total-return" class="font-geist-mono text-2xl text-orange-500">48.75 JB</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section id="stats" class="py-16 bg-black relative">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-16">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-4">实时网络数据</h2>
+                        <p class="text-gray-300 max-w-2xl mx-auto">了解JB Token生态系统的关键指标和实时数据</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                        <div class="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-6 text-center hover:border-gray-700 transition-colors">
+                            <i data-lucide="database" class="w-8 h-8 mx-auto mb-4 text-orange-500"></i>
+                            <div class="text-sm text-gray-400 mb-1">总供应量</div>
+                            <div class="font-geist-mono text-2xl mb-1">21,000,000 JB</div>
+                            <div class="text-xs text-gray-500">100%</div>
+                        </div>
+                        <div class="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-6 text-center hover:border-gray-700 transition-colors">
+                            <i data-lucide="pickaxe" class="w-8 h-8 mx-auto mb-4 text-orange-500"></i>
+                            <div class="text-sm text-gray-400 mb-1">矿池分配</div>
+                            <div class="font-geist-mono text-2xl mb-1">12,600,000 JB</div>
+                            <div class="text-xs text-gray-500">60%</div>
+                        </div>
+                        <div class="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-6 text-center hover:border-gray-700 transition-colors">
+                            <i data-lucide="chart-bar" class="w-8 h-8 mx-auto mb-4 text-orange-500"></i>
+                            <div class="text-sm text-gray-400 mb-1">已流通供应量</div>
+                            <div class="font-geist-mono text-2xl mb-1">2,986,200 JB</div>
+                            <div class="text-xs text-gray-500">14.2%</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-6 mb-8">
+                        <h3 class="text-xl font-semibold mb-6">网络活动</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full table-auto">
+                                <thead>
+                                    <tr class="text-left text-gray-400 border-b border-gray-800">
+                                        <th class="pb-3 pl-2 font-medium">时间</th>
+                                        <th class="pb-3 font-medium">钱包地址</th>
+                                        <th class="pb-3 font-medium">操作</th>
+                                        <th class="pb-3 font-medium text-right pr-2">数量</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-sm font-geist-mono">
+                                    <tr class="border-b border-gray-800/50 hover:bg-black/20">
+                                        <td class="py-3 pl-2 text-gray-400">2分钟前</td>
+                                        <td>0x7c2...3f1e</td>
+                                        <td class="text-green-500">挖矿</td>
+                                        <td class="text-right pr-2">+128.5 JB</td>
+                                    </tr>
+                                    <tr class="border-b border-gray-800/50 hover:bg-black/20">
+                                        <td class="py-3 pl-2 text-gray-400">5分钟前</td>
+                                        <td>0x3a9...8c7d</td>
+                                        <td class="text-blue-500">质押</td>
+                                        <td class="text-right pr-2">500 JB</td>
+                                    </tr>
+                                    <tr class="border-b border-gray-800/50 hover:bg-black/20">
+                                        <td class="py-3 pl-2 text-gray-400">12分钟前</td>
+                                        <td>0xf12...6e9b</td>
+                                        <td class="text-orange-500">提取</td>
+                                        <td class="text-right pr-2">-72.3 JB</td>
+                                    </tr>
+                                    <tr class="border-b border-gray-800/50 hover:bg-black/20">
+                                        <td class="py-3 pl-2 text-gray-400">25分钟前</td>
+                                        <td>0x45d...1a7c</td>
+                                        <td class="text-green-500">挖矿</td>
+                                        <td class="text-right pr-2">+137 JB</td>
+                                    </tr>
+                                    <tr class="hover:bg-black/20">
+                                        <td class="py-3 pl-2 text-gray-400">36分钟前</td>
+                                        <td>0xb8e...9f4a</td>
+                                        <td class="text-blue-500">质押</td>
+                                        <td class="text-right pr-2">1,200 JB</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-6">
+                            <h3 class="text-lg font-semibold mb-4">矿池释放曲线</h3>
+                            <p class="text-sm text-gray-400 mb-4">JB Token采用递减释放算法，确保代币长期价值。</p>
+                            <div class="h-[180px] release-curve-container">
+                                <svg viewBox="0 0 400 180" class="w-full h-full">
+                                    <defs>
+                                        <linearGradient id="curveGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#FF9900;stop-opacity:0.6" />
+                                            <stop offset="100%" style="stop-color:#FF9900;stop-opacity:0" />
+                                        </linearGradient>
+                                    </defs>
+                                    <path d="M0,30 C80,30 100,50 160,90 S300,150 400,160 L400,180 L0,180 Z" fill="url(#curveGradient)" />
+                                    <path d="M0,30 C80,30 100,50 160,90 S300,150 400,160" fill="none" stroke="#FF9900" stroke-width="2" />
+                                    <line x1="0" y1="180" x2="400" y2="180" stroke="#555" stroke-width="1" stroke-dasharray="4,4" />
+                                    <line x1="0" y1="0" x2="0" y2="180" stroke="#555" stroke-width="1" stroke-dasharray="4,4" />
+                                </svg>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-400 mt-2">
+                                <div>初始日释放量: 37,800 JB</div>
+                                <div>每30天降低5%</div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-6">
+                            <h3 class="text-lg font-semibold mb-4">质押数据</h3>
+                            <div class="grid grid-cols-2 gap-4 mb-6">
+                                <div>
+                                    <div class="text-sm text-gray-400 mb-1">总质押量</div>
+                                    <div class="font-geist-mono text-xl">762,488 JB</div>
+                                </div>
+                                <div>
+                                    <div class="text-sm text-gray-400 mb-1">质押率</div>
+                                    <div class="font-geist-mono text-xl text-orange-500">25.5%</div>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="text-sm text-gray-400 mb-1">质押时长分布</div>
+                                <div class="flex h-8 rounded-md overflow-hidden">
+                                    <div class="bg-orange-600 h-full" style="width: 35%"></div>
+                                    <div class="bg-orange-500 h-full" style="width: 45%"></div>
+                                    <div class="bg-orange-400 h-full" style="width: 20%"></div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-400">
+                                <div>< 12小时: 35%</div>
+                                <div>12-48小时: 45%</div>
+                                <div>> 48小时: 20%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-16 bg-gray-900 relative">
+            <div class="container mx-auto px-4">
+                <div class="max-w-3xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-4">关于 JB Token</h2>
+                        <p class="text-gray-300">下一代创新型Meme币挖矿平台，融合PoS共识机制与先进的代币经济模型</p>
+                    </div>
+
+                    <div class="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-6 mb-8">
+                        <h3 class="text-xl font-semibold mb-4">JB Token 的独特优势</h3>
+                        <div class="space-y-4">
+                            <div class="flex">
+                                <i data-lucide="badge-check" class="w-5 h-5 text-orange-500 mr-3 flex-shrink-0 mt-0.5"></i>
+                                <div>
+                                    <h4 class="font-medium">稀缺性设计</h4>
+                                    <p class="text-sm text-gray-400">总供应量仅2100万枚，采用递减释放算法，确保代币长期稀缺性和价值</p>
+                                </div>
+                            </div>
+                            <div class="flex">
+                                <i data-lucide="badge-check" class="w-5 h-5 text-orange-500 mr-3 flex-shrink-0 mt-0.5"></i>
+                                <div>
+                                    <h4 class="font-medium">公平分配机制</h4>
+                                    <p class="text-sm text-gray-400">单次最大投资1U，24小时冷却期，让每位社区成员都有平等参与机会</p>
+                                </div>
+                            </div>
+                            <div class="flex">
+                                <i data-lucide="badge-check" class="w-5 h-5 text-orange-500 mr-3 flex-shrink-0 mt-0.5"></i>
+                                <div>
+                                    <h4 class="font-medium">质押增益系统</h4>
+                                    <p class="text-sm text-gray-400">持续质押12小时以上可获得30%额外产出，鼓励长期持有而非短期投机</p>
+                                </div>
+                            </div>
+                            <div class="flex">
+                                <i data-lucide="badge-check" class="w-5 h-5 text-orange-500 mr-3 flex-shrink-0 mt-0.5"></i>
+                                <div>
+                                    <h4 class="font-medium">活跃度奖励</h4>
+                                    <p class="text-sm text-gray-400">挖矿收益与全网活跃度挂钩，最高可额外获得30%的代币奖励</p>
+                                </div>
+                            </div>
+                            <div class="flex">
+                                <i data-lucide="badge-check" class="w-5 h-5 text-orange-500 mr-3 flex-shrink-0 mt-0.5"></i>
+                                <div>
+                                    <h4 class="font-medium">透明的经济模型</h4>
+                                    <p class="text-sm text-gray-400">所有挖矿和质押数据均在链上公开可查，确保系统公正透明</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <h3 class="text-xl font-semibold mb-6">加入JB Token社区</h3>
+                        <div class="flex flex-wrap justify-center gap-4 mb-6">
+                            <a href="#" class="flex items-center px-4 py-2 bg-gray-800 hover:bg-gray-700 transition-colors rounded-md">
+                                <i data-lucide="twitter" class="w-5 h-5 mr-2"></i>
+                                Twitter
+                            </a>
+                            <a href="#" class="flex items-center px-4 py-2 bg-gray-800 hover:bg-gray-700 transition-colors rounded-md">
+                                <i data-lucide="message-circle" class="w-5 h-5 mr-2"></i>
+                                Telegram
+                            </a>
+                            <a href="#" class="flex items-center px-4 py-2 bg-gray-800 hover:bg-gray-700 transition-colors rounded-md">
+                                <i data-lucide="github" class="w-5 h-5 mr-2"></i>
+                                GitHub
+                            </a>
+                            <a href="#" class="flex items-center px-4 py-2 bg-gray-800 hover:bg-gray-700 transition-colors rounded-md">
+                                <i data-lucide="file-text" class="w-5 h-5 mr-2"></i>
+                                白皮书
+                            </a>
+                        </div>
+                        <p class="text-sm text-gray-400">加入我们的社区，了解更多关于JB Token的最新动态和发展规划</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    <div id="mining-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity">
+        <div class="bg-gray-900 border border-gray-800 rounded-xl max-w-md w-full mx-4 overflow-hidden">
+            <div class="p-6 border-b border-gray-800">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-semibold">确认挖矿</h3>
+                    <button class="close-modal text-gray-400 hover:text-white transition-colors">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="text-gray-400">投资金额</div>
+                    <div class="font-geist-mono text-xl">1.0 U</div>
+                </div>
+                <div class="flex items-center justify-between mb-6">
+                    <div class="text-gray-400">预计获得</div>
+                    <div class="font-geist-mono text-xl text-orange-500">137 JB</div>
+                </div>
+                <div class="flex items-center justify-between mb-6">
+                    <div class="text-gray-400">冷却时间</div>
+                    <div class="font-geist-mono">24小时</div>
+                </div>
+                <div class="p-3 bg-orange-500/10 border border-orange-500/20 rounded-lg mb-6">
+                    <div class="flex items-start">
+                        <i data-lucide="alert-circle" class="w-5 h-5 text-orange-500 mr-2 flex-shrink-0 mt-0.5"></i>
+                        <p class="text-sm text-gray-300">确认交易后，您的投资将立即转换为JB Token并进入质押池。下次挖矿需等待24小时冷却期。</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <button class="close-modal py-2.5 bg-gray-800 hover:bg-gray-700 transition-colors rounded-md font-medium text-white">取消</button>
+                    <button id="confirm-mining-btn" class="py-2.5 bg-gradient-to-r from-orange-500 to-yellow-600 hover:opacity-90 transition-opacity rounded-md font-medium text-white">确认挖矿</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="success-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity">
+        <div class="bg-gray-900 border border-gray-800 rounded-xl max-w-md w-full mx-4 p-6 text-center">
+            <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-green-500/20 flex items-center justify-center">
+                <i data-lucide="check" class="w-8 h-8 text-green-500"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">操作成功！</h3>
+            <p class="text-gray-400 mb-6">您已成功获得 <span id="success-amount" class="font-geist-mono text-white">137 JB</span>，代币已自动进入质押池。</p>
+            <button class="close-modal w-full py-2.5 bg-gradient-to-r from-green-600 to-green-500 hover:opacity-90 transition-opacity rounded-md font-medium text-white">完成</button>
+        </div>
+    </div>
+
+    <footer class="bg-black py-8 border-t border-gray-900">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center mb-6 md:mb-0">
+                    <svg class="w-8 h-8 mr-3" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="20" cy="20" r="18" fill="#111111" stroke="#FF9900" stroke-width="2"/>
+                        <path d="M13 15.5C13 14.12 14.12 13 15.5 13H24.5C25.88 13 27 14.12 27 15.5V24.5C27 25.88 25.88 27 24.5 27H15.5C14.12 27 13 25.88 13 24.5V15.5Z" fill="#FF9900"/>
+                        <path d="M18 19L22 19L22 21L18 21L18 19Z" fill="white"/>
+                    </svg>
+                    <span class="text-lg font-bold bg-gradient-to-r from-orange-500 to-yellow-500 text-transparent bg-clip-text">JB Token</span>
+                </div>
+                <div class="text-gray-400 text-sm mb-6 md:mb-0 text-center md:text-left">
+                    &copy; 2023 JB Token. All rights reserved.
+                </div>
+                <div class="text-sm text-gray-500">
+                    by 未知迷茫
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="particles.js"></script>
+    <script src="app.js"></script>
+    <script>
+        window.addEventListener("wheel", (e)=> {
+            const isPinching = e.ctrlKey
+            if(isPinching) e.preventDefault()
+        }, { passive: false })
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>
